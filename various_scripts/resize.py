@@ -6,8 +6,8 @@ from pathlib import Path
 def new_size(height, width, target):
     mi = min((width, height))
     r = target / mi
-    h = max((512, r * height))
-    w = max((512, r * width))
+    h = max((target, r * height))
+    w = max((target, r * width))
     return int(h), int(w)
 
 
