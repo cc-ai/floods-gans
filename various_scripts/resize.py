@@ -1,6 +1,10 @@
-import cv2
+# A script to resize images in --dest to a ratio-preserving
+# new minimal dimension --size saved into --dest
+
 import sys
 from pathlib import Path
+
+import cv2
 
 
 def new_size(height, width, target):
