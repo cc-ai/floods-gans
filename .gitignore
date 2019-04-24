@@ -1,3 +1,5 @@
-attention_cyclegan/input/
-
+**/*.JPG
+**/*.jpeg
+**/*.jpg
+**/*.png
 **/*.pyc
