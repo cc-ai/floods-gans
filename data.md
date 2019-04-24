@@ -10,4 +10,4 @@ Here is a list of datasets we've used and there structure. Pictures are "open-so
 | 11.03AllHousesFlooded.zip  | [GDrive](https://drive.google.com/file/d/1aY27R6tdoJzk6FLVPsacb0p6k1gMDThL) |  3,539 pictures of flooding, augmented based on all of the flooding images from 27.02.FloodingData by reducing dimensionality, cropping and flipping horizontally   |
 | 11.03BestFloodAugmented    | [GDrive](https://drive.google.com/file/d/1Z8ns2Y2xK_ZUXimG5zRVFmlyJGu2bUoy) | 1,175 pictures of flooding, augmented based on the best flooding images from 27.02.FloodingData by reducing dimensionality, cropping and flipping horizontally  |
 
-Description of every image in `27.02.FloodingData` can be found in [27.02.FloodingData_image_descriptions](27.02.FloodingData_image_descriptions.txt)
+Metadata of every image in `27.02.FloodingData` can be found in [27.02.FloodingData_image_descriptions](27.02.FloodingData_image_descriptions.txt)
