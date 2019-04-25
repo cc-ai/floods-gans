@@ -24,7 +24,7 @@ DATASET_TO_IMAGETYPE = {
     "lion2tiger_test": ".jpg",
     "summer2winter_yosemite_train": ".jpg",
     "summer2winter_yosemite_test": ".jpg",
-    "ccai-all_train": ".jpg",
+    "ccai-all_train": ".png",
 }
 
 """The path to the output csv file."""
