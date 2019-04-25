@@ -4,4 +4,6 @@
 **/*.png
 **/*.pyc
 
+**/checkpoints/
+
 output/
