@@ -3,7 +3,10 @@
 **/*.jpg
 **/*.png
 **/*.pyc
+**/*.out
+**/*.rar
 
 **/checkpoints/
 
 output/
+**/cc_cg_ct/
