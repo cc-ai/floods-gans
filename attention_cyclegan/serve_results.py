@@ -20,7 +20,7 @@ def parametrized_web_server(loc):
                 epoch_files = list(loc.glob("*epoch*.html"))
                 if "latest" in self.path:
                     epoch_indexes = [
-                        int(e.split("_")[1].split(".")[0]) for e in epoch_files
+                        int(str(e).split("_")[-2].split(".")[0]) for e in epoch_files
                     ]
                     file_to_open = str(epoch_files[np.argmax(epoch_indexes)])
                 else:
@@ -34,7 +34,7 @@ def parametrized_web_server(loc):
                         str(e) for e in epoch_files
                     )
                     self.send_response(404)
-
+            self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(bytes(file_to_open, "utf-8"))
 
@@ -52,8 +52,10 @@ if __name__ == "__main__":
     )
     ap.add_argument("-p", "--port", required=False, help="port to serve on")
     args = vars(ap.parse_args())
-    print("Serving\n", str(args))
+    print("Serving localhost\n", str(args))
     loc = Path(args["files"]).resolve()
+
+    port = int(args["port"]) if args["port"] else 8080
 
     if len(list(loc.glob("*epoch*.html"))) == 0:
         raise AssertionError(
@@ -62,5 +64,5 @@ if __name__ == "__main__":
             + "\n".join(str(l) for l in loc.glob("*epoch*.html"))
         )
 
-    with HTTPServer(("localhost", 8080), parametrized_web_server(loc)) as httpd:
+    with HTTPServer(("localhost", port), parametrized_web_server(loc)) as httpd:
         httpd.serve_forever()
