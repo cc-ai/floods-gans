@@ -50,7 +50,9 @@ if __name__ == "__main__":
         required=False,
         help="where the epoch files are located from current working directory",
     )
+    ap.add_argument("-p", "--port", required=False, help="port to serve on")
     args = vars(ap.parse_args())
+    print("Serving\n", str(args))
     loc = Path(args["files"]).resolve()
 
     if len(list(loc.glob("*epoch*.html"))) == 0:
