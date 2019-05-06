@@ -7,7 +7,7 @@ The code has been adapted from [nothinglo/Deep-Photo-Enhancer](https://github.co
 **Remark 2 :** There might be an issue with image resizing through the network. (Other version without resizing is available but slower).
 
 
-**To test the inference ** :
+**To test the inference** :
 
 - Download the pre-trained [weights](https://drive.google.com/open?id=1-0g4qUsjz0E4MShy31OZzB7EKiCyUwXC)
 - Unzip in the model repertory.
