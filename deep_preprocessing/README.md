@@ -3,6 +3,7 @@
 The code has been adapted from [nothinglo/Deep-Photo-Enhancer](https://github.com/nothinglo/Deep-Photo-Enhancer/blob/master/README.md) to be compatible with tensorflow 1.0. 
 
 **Remark 1 :** Only the model trained on MIT-Adobe 5K dataset with unpaired data is available here.
+
 **Remark 2 :** There might be an issue with image resizing through the network. (Other version without resizing is available but slower).
 
 
