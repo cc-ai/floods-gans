@@ -10,7 +10,7 @@ The code has been adapted from [nothinglo/Deep-Photo-Enhancer](https://github.co
 **To test the inference** :
 
 - Download the pre-trained [weights](https://drive.google.com/open?id=1-0g4qUsjz0E4MShy31OZzB7EKiCyUwXC)
-- Unzip in the model repertory.
+- Unzip in a ./model repository.
 - Use the main.py
 
 
