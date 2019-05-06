@@ -5,7 +5,7 @@ import random, os
 from .CONVNET import *
 # Configure
 FLAGS = {}
-FLAGS['num_gpu'] = '3'
+FLAGS['num_gpu'] = '1'
 FLAGS['num_exp']   = 577
 FLAGS['num_epoch'] = 134
 FLAGS['method'] = 'Unsupervised on MIT-Adobe-5K'
@@ -23,8 +23,8 @@ FLAGS['data_compute_dtype'] = np.float32
 FLAGS['data_image_size'] = 512
 FLAGS['data_image_channel'] = 3
 FLAGS['process_random_seed'] = 2
-FLAGS['folder_input'] = '../static/uploads/'
-FLAGS['folder_test_img']  = '../static/result/'
+FLAGS['folder_input'] = '../folder_input/'
+FLAGS['folder_output']  = '../folder_output/'
 random.seed(FLAGS['process_random_seed'])
 class DataFlowMat(object):
     def __init__(self, b):
