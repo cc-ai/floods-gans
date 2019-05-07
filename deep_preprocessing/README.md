@@ -8,7 +8,7 @@ The code has been adapted from [nothinglo/Deep-Photo-Enhancer](https://github.co
 
 **To test the inference ** :
 
-- Download the pre-trained [weights](https://drive.google.com/open?id=1-0g4qUsjz0E4MShy31OZzB7EKiCyUwXC)
+- Download the pre-trained [weights](https://drive.google.com/open?id=193uXlDcM41QYbf8QeFML0wkOKrKIjywd)
 - Unzip in the model repertory.
 - Use the main.py
 
