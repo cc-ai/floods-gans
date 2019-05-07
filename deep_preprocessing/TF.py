@@ -77,10 +77,10 @@ def getInputPhoto(file_name):
     #print(current_time() + ', [getInputPhoto]: file_name = %s' % (file_name))
     file_name_without_ext = os.path.splitext(file_name)[0]
     input_img = cv2.imread(file_name, 1)
-    #os.remove(file_name)
+    os.remove(file_name)
     if checkValidImg(input_img):
         resize_input_img = normalizeImage(input_img)
-        file_name = file_name_without_ext+"_resize" + FLAGS['data_output_ext'] 
+        file_name = file_name_without_ext+FLAGS['data_output_ext'] 
         cv2.imwrite(file_name, resize_input_img)
         return file_name
     else:
@@ -96,6 +96,6 @@ def processImg(file_in_name, file_out_name):
         test_df.mat1.rect + test_df.mat1.rot
     enhance_test_img = sess.run(netG_test_output1_crop, feed_dict={t:d for t, d in zip(dict_t, dict_d)})
     enhance_test_img = safe_casting(enhance_test_img * tf.as_dtype(FLAGS['data_input_dtype']).max, FLAGS['data_input_dtype'])
-    enhance_img_file_path = file_out_name
+    enhance_img_file_path = file_out_name+FLAGS['data_output_ext'] 
     cv2.imwrite(enhance_img_file_path, enhance_test_img)
     return enhance_img_file_path
