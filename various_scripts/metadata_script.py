@@ -1,3 +1,6 @@
+# run command : python3 metadata_script.py log_dir img_dir
+#log_dir is the logs folder
+#img_dir is the downloads folder
 import json
 import os
 import sys
