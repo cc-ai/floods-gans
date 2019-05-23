@@ -1,5 +1,11 @@
 An unstructured set of scripts of various utilities, relevance and quality
 
+## For the metadata_script.py :
+It compares the downloads folder where you have image folders for all the queries you search and the logs foler which contains json files for the queries and updates the log files with deleted images after manual fine-tuning (deletes the logs for deleted images).
+
+running `python3 metadata_script.py log_dir img_dir` compares the two folders and creates modified log files with names "mod_"+original filename in the logs folder(log_dir). log_dir refers to logs folder and img_dir refers to downloads folder generated from running googleimagesdownload command.
+
+
 ## Merging data from `googleimagesdownload`
 
 -> ref: https://github.com/hardikvasa/google-images-download
