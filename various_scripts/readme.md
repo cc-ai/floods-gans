@@ -37,3 +37,11 @@ To download more than 100 images at once, you should install `chromedriver` whic
 # mac
 $ brew cask install chromedriver
 ```
+
+## Purging data from `googleimagesdownload`
+
+If you've already downloaded and merged runs of `googleimagesdownload` and run a new one, you can purge it: **the script will delete all photos in this new run which are already in the merged/ folder**. This allows you to ignore already downloaded images when going through the new data
+
+```
+$ python purge.py run3 run4
+```

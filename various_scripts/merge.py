@@ -63,12 +63,21 @@ if __name__ == "__main__":
                         images.append(log)
 
     print("Listed")
+    max_file_name_length = 255 - len(str(new_downloads)) - 10
 
     for i, log in enumerate(images):
         new_name = "{}. ".format(i) + ". ".join(log["image_filename"].split(". ")[1:])
+        new_name = ".".join(new_name.split(".")[:-1])[:max_file_name_length] + ".jpg"
         log["original_image_filename"] = log["image_filename"]
         log["image_filename"] = new_name
-        shutil.copy(log["local_image_path_str"], new_downloads / new_name)
+        try:
+            shutil.copy(
+                log["local_image_path_str"],
+                new_downloads / new_name[:max_file_name_length],
+            )
+        except OSError as e:
+            print(e)
+            print("Ignoring file")
 
     print("Copied")
 
