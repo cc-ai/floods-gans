@@ -17,5 +17,5 @@ for filename in os.listdir(log_dir):
 				exists = os.path.isfile(os.path.join(img_dir,os.path.join(core_file,data[item]['image_filename'])))
 				if exists:
 					data1.append(data[item])
-		with open(os.path.join(log_dir,"mod_"+filename), 'w') as outfile:  
+		with open(os.path.join(log_dir,filename), 'w') as outfile:  
 			json.dump(data1, outfile)
