@@ -59,3 +59,12 @@ python main.py --to_train=2 --log_dir=./output/AGGAN/exp_01 --config_filename=./
 	```bash
 	python main.py --to_train=0 --log_dir=./output/AGGAN/exp_01 --config_filename=./configs/exp_01_test.json --checkpoint_dir=./output/AGGAN/exp_01/#old_timestamp# 
 	```
+
+# Combine outputs
+
+1. copy `combine_html_outputs.py` alongside `imgs/` and `epoch_X.html` files
+2. run it `$ python combine.py`
+3. open `combined.html`
+4. wait a bit, there are a lot of images to load. When it's done, the "loading..." text will disapear
+5. select epoch number and domains (A/B/A and B)
+6. click "go" or hit return key
