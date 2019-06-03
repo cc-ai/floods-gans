@@ -12,6 +12,15 @@ Current processers are:
 * Flipper: flips left/right a ratio (`0 <= r <= 1`) of the data 
 * Saver: saves processed data into designated format
 
+The input data to the pipleine should be structured like:
+
+```
+.
+├── data
+│   ├── floods
+│   └── houses
+```
+
 ## Usage
 
 ```
@@ -35,6 +44,14 @@ optional arguments:
                         original image)
   -x, --force           Force overwrite potentially existing output dir
 ```
+
+For instance:
+
+```
+$ python pipe.py -i /path/to/data -o /path/to/output -f jpg -p 0.3 --force
+```
+
+This will convert all images in `data/floods` and `data/houses` into `.jpg` format in the `output/floods` and `output/houses` directories. 30% (random) of the images of each domain will be flipped left/right. If there already is an `output/` folder it will be entirely overwritten and pre-existing data will be lost (`--force`).
 
 ## Add Processer
 
