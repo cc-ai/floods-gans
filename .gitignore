@@ -5,6 +5,7 @@
 **/*.pyc
 **/*.out
 **/*.rar
+**/*.DS_Store
 
 **/checkpoints/
 
