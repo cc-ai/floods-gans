@@ -97,15 +97,17 @@ def transform(self, X, y=None):
         return X
 ```
 
-And finally add it to the pipeline steps in `pipe.py`
+And finally add it to the pipeline steps in `pipe.py`. 
+
+*Put it **before** the `Saver`*
 
 ```python
 Pipeline(
     steps=[
         ("Loader", procs.Loader(input_dir)),
         ("Flipper", procs.Flipper(args.flip)),
-        ("Saver", procs.Saver(out, args.format)),
         ("MyProcesser", procs.MyProcesser(yourArgs)),
+        ("Saver", procs.Saver(out, args.format)),
     ]
 )
 ```
