@@ -11,7 +11,7 @@ DATASET_TO_SIZES = {
     "lion2tiger_test": 103,
     "summer2winter_yosemite_train": 1231,
     "summer2winter_yosemite_test": 309,
-    "ccai-all_train": 539,
+    "ccai-all_train": 730,
 }
 
 """The image types of each dataset. Currently only supports .jpg or .png"""
