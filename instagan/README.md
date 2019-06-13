@@ -28,6 +28,12 @@ Target folder structure:
         └── valB_seg
 ```
 
+## Runs
+
+```
+(victor) $ python train.py --dataroot /network/tmp1/ccai/inference_data/instagan/floods_with_waterdb --model insta_gan --name floods_wdb_instagan --loadSizeH 330 --loadSizeW 220 --fineSizeH 300 --fineSizeW 200
+```
+
 # InstaGAN: Instance-aware Image-to-Image Translation
 
 PyTorch implementation of ["InstaGAN: Instance-aware Image-to-Image Translation"](https://openreview.net/forum?id=ryxwJhC9YX) (ICLR 2019).
