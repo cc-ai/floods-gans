@@ -1,3 +1,31 @@
+# CCAI instructions
+
+## preprocessing
+
+Sources:
+
+*  VideoWaterDB
+
+To add a source, add its preprocessing function in `generate_insta_floods.py`.
+
+Target folder structure:
+
+```
+# flood = domain A
+# no flood = domain B
+.
+└── datasets
+    └── insta-floods
+        ├── trainA
+        ├── trainA_seg
+        ├── trainB
+        ├── trainB_seg
+        ├── valA
+        ├── valA_seg
+        ├── valB
+        └── valB_seg
+```
+
 # InstaGAN: Instance-aware Image-to-Image Translation
 
 PyTorch implementation of ["InstaGAN: Instance-aware Image-to-Image Translation"](https://openreview.net/forum?id=ryxwJhC9YX) (ICLR 2019).
