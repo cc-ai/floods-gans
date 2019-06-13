@@ -4,12 +4,10 @@ import numpy as np
 from shutil import copyfile
 
 
-def process_water_video_db(val_ratio=0.25):
+def process_water_video_db(val_ratio=0.25, domain="A", dest=Path("./insta-floods")):
     name = "[VideoWaterDB] "
 
     source = Path("./floods-source/VideoWaterDB").resolve()
-    dest = Path("./insta-floods")
-    domain = "A"
 
     domains = ["canal", "fountain", "lake", "ocean", "pond", "river", "stream"]
     images = list((source / "images").glob("*.png"))
@@ -29,34 +27,18 @@ def process_water_video_db(val_ratio=0.25):
     val_masks = [source / "masks" / i.name for i in val]
 
     folder = dest / "train{}".format(domain)
-    if not folder.exists():
-        folder.mkdir()
-    if len(list(folder.glob("**/*"))):
-        raise ValueError(str(folder) + " is not empty")
     for i in tqdm(train, desc=name + folder.name):
         copyfile(i, folder / i.name)
 
     folder = dest / "train{}_seg".format(domain)
-    if not folder.exists():
-        folder.mkdir()
-    if len(list(folder.glob("**/*"))):
-        raise ValueError(str(folder) + " is not empty")
     for i in tqdm(train_masks, desc=name + folder.name):
         copyfile(i, folder / i.name)
 
     folder = dest / "val{}".format(domain)
-    if not folder.exists():
-        folder.mkdir()
-    if len(list(folder.glob("**/*"))):
-        raise ValueError(str(folder) + " is not empty")
     for i in tqdm(val, desc=name + folder.name):
         copyfile(i, folder / i.name)
 
     folder = dest / "val{}_seg".format(domain)
-    if not folder.exists():
-        folder.mkdir()
-    if len(list(folder.glob("**/*"))):
-        raise ValueError(str(folder) + " is not empty")
     for i in tqdm(val_masks, desc=name + folder.name):
         copyfile(i, folder / i.name)
 
@@ -64,4 +46,19 @@ def process_water_video_db(val_ratio=0.25):
 if __name__ == "__main__":
 
     val_ratio = 0.25
-    process_water_video_db(val_ratio)
+    domain = "A"
+    dest = Path("./insta-floods")
+
+    folders = [
+        dest / "train{}".format(domain),
+        dest / "train{}_seg".format(domain),
+        dest / "val{}".format(domain),
+        dest / "val{}_seg".format(domain),
+    ]
+    for folder in folders:
+        if not folder.exists():
+            folder.mkdir()
+        if len(list(folder.glob("**/*"))):
+            raise ValueError(str(folder) + " is not empty")
+
+    process_water_video_db(val_ratio, domain, dest)
