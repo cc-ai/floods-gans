@@ -5,6 +5,8 @@
 Sources:
 
 *  VideoWaterDB
+*  deeplab_segmentation_houses
+*  210_flooded_houses
 
 To add a source, add its preprocessing function in `generate_insta_floods.py`.
 
