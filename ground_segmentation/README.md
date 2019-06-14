@@ -23,7 +23,7 @@ This code requires:
 - SciPy==1.0.0
 - Cuda
 
-- Pretrained weight downloaded
+- Model weights downloaded
 
 **Examples**
 
