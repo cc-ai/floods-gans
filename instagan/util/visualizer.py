@@ -70,7 +70,7 @@ class Visualizer():
         exit(1)
 
     # |visuals|: dictionary of images to display or save
-    def display_current_results(self, visuals, epoch, save_result):
+    def display_current_results(self, visuals, epoch, save_result, comet_exp=None):
         if self.display_id > 0:  # show images in the browser
             ncols = self.ncols
             if ncols > 0:
@@ -124,6 +124,8 @@ class Visualizer():
                 image_numpy = util.tensor2im(image)
                 img_path = os.path.join(self.img_dir, 'epoch%.3d_%s.png' % (epoch, label))
                 util.save_image(image_numpy, img_path)
+                if comet_exp is not None:
+                    comet_exp.log_image(img_path)
             # update website
             webpage = html.HTML(self.web_dir, 'Experiment name = %s' % self.name, reflesh=1)
             for n in range(epoch, 0, -1):

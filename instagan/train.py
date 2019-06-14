@@ -1,20 +1,19 @@
+from comet_ml import Experiment
 import time
-import comet_ml
+import sys
 from options.train_options import TrainOptions
 from data import CreateDataLoader
 from models import create_model
 from util.visualizer import Visualizer
-from comet_ml import Experiment
 
-experiment = Experiment(api_key="uHmRlPBxHkk0Cm6KKe59L0IEi",
-                        project_name="ccai-instagan", workspace="bsahil29")
+experiment = Experiment(project_name="instagan", workspace="vict0rsch")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     opt = TrainOptions().parse()
     data_loader = CreateDataLoader(opt)
     dataset = data_loader.load_data()
     dataset_size = len(data_loader)
-    print('#training images = %d' % dataset_size)
+    print("#training images = %d" % dataset_size)
 
     model = create_model(opt)
     model.setup(opt)
@@ -38,26 +37,38 @@ if __name__ == '__main__':
 
             if total_steps % opt.display_freq == 0:
                 save_result = total_steps % opt.update_html_freq == 0
-                visualizer.display_current_results(model.get_current_visuals(), epoch, save_result)
+                visualizer.display_current_results(
+                    model.get_current_visuals(), epoch, save_result, experiment
+                )
 
             if total_steps % opt.print_freq == 0:
                 losses = model.get_current_losses()
                 t = (time.time() - iter_start_time) / opt.batch_size
                 visualizer.print_current_losses(epoch, epoch_iter, losses, t, t_data)
                 if opt.display_id > 0:
-                    visualizer.plot_current_losses(epoch, float(epoch_iter) / dataset_size, opt, losses)
+                    visualizer.plot_current_losses(
+                        epoch, float(epoch_iter) / dataset_size, opt, losses
+                    )
 
             if total_steps % opt.save_latest_freq == 0:
-                print('saving the latest model (epoch %d, total_steps %d)' % (epoch, total_steps))
-                save_suffix = 'iter_%d' % total_steps if opt.save_by_iter else 'latest'
+                print(
+                    "saving the latest model (epoch %d, total_steps %d)"
+                    % (epoch, total_steps)
+                )
+                save_suffix = "iter_%d" % total_steps if opt.save_by_iter else "latest"
                 model.save_networks(save_suffix)
 
             iter_data_time = time.time()
         if epoch % opt.save_epoch_freq == 0:
-            print('saving the model at the end of epoch %d, iters %d' % (epoch, total_steps))
-            model.save_networks('latest')
+            print(
+                "saving the model at the end of epoch %d, iters %d"
+                % (epoch, total_steps)
+            )
+            model.save_networks("latest")
             model.save_networks(epoch)
 
-        print('End of epoch %d / %d \t Time Taken: %d sec' %
-              (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time))
+        print(
+            "End of epoch %d / %d \t Time Taken: %d sec"
+            % (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time)
+        )
         model.update_learning_rate()
