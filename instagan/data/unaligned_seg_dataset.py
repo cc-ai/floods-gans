@@ -5,6 +5,7 @@ from data.image_folder import make_dataset
 from PIL import Image
 import random
 import torch
+from pathlib import Path
 
 
 class UnalignedSegDataset(BaseDataset):
@@ -72,7 +73,7 @@ class UnalignedSegDataset(BaseDataset):
 #             return torch.cat(segs)
 
         
-        
+
 	def __getitem__(self, index):
 		index_A = index % self.A_size
 		if self.opt.serial_batches:
@@ -80,10 +81,22 @@ class UnalignedSegDataset(BaseDataset):
 		else:
 			index_B = random.randint(0, self.B_size - 1)
 
-		A_path = self.A_paths[index_A]
-		B_path = self.B_paths[index_B]
-		A_seg_path = A_path.replace('A', 'A_{}'.format(self.seg_dir))
-		B_seg_path = B_path.replace('B', 'B_{}'.format(self.seg_dir))
+		A_path = Path(self.A_paths[index_A])
+		B_path = Path(self.B_paths[index_B])
+		A_seg_path = A_path.parent.parent / A_path.parent.name.replace("A", "A_seg") / A_path.name
+		B_seg_path = B_path.parent.parent / B_path.parent.name.replace("B", "B_seg") / B_path.name
+
+		A_path = str(A_path)
+		B_path = str(B_path)
+		A_seg_path = str(A_seg_path)
+		B_seg_path = str(B_seg_path)
+
+		# print()
+		# print(A_path)
+		# print(A_seg_path)
+		# print(B_path)
+		# print(B_seg_path)
+		# print()
 
 		A_idx = A_path.split('/')[-1].split('.')[0]
 		B_idx = B_path.split('/')[-1].split('.')[0]

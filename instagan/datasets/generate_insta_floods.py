@@ -3,6 +3,7 @@ from tqdm import tqdm
 import numpy as np
 from shutil import copyfile, rmtree
 import sys
+import os
 
 
 def copy_images(name, dest, domain, train, train_masks, val, val_masks):
@@ -12,7 +13,10 @@ def copy_images(name, dest, domain, train, train_masks, val, val_masks):
 
     folder = dest / "train{}_seg".format(domain)
     for i in tqdm(train_masks, desc=name + folder.name):
-        copyfile(i, folder / i.name)
+        target = i.stem
+        if not target.endswith("_0"):
+            target += "_0"
+        copyfile(i, folder / (target + i.suffix))
 
     folder = dest / "val{}".format(domain)
     for i in tqdm(val, desc=name + folder.name):
@@ -20,10 +24,32 @@ def copy_images(name, dest, domain, train, train_masks, val, val_masks):
 
     folder = dest / "val{}_seg".format(domain)
     for i in tqdm(val_masks, desc=name + folder.name):
-        copyfile(i, folder / i.name)
+        target = i.stem
+        if not target.endswith("_0"):
+            target += "_0"
+        copyfile(i, folder / (target + i.suffix))
 
     print()
     print()
+
+
+def check(dest):
+    # sanity check
+    for time in ["train", "val"]:
+        for domain in ["A", "B"]:
+            imgs = dest / (time + domain)
+            msks = dest / (time + domain + "_seg")
+            imgs = set(i.stem + "_0" + i.suffix for i in imgs.iterdir())
+            msks = set(i.name for i in msks.iterdir())
+            try:
+                assert len(imgs - msks) == 0
+            except AssertionError:
+                for i in imgs:
+                    if i not in msks:
+                        print("Mask not found: ", i)
+                for i in msks:
+                    if i not in imgs:
+                        print("Image not found: ", i)
 
 
 def process_water_video_db(val_ratio=0.25, domain="A", dest=Path("./insta-floods")):
@@ -61,14 +87,13 @@ def process_deeplab_segmentation_houses(
     source = Path("/network/tmp1/ccai/data/deeplab_segmented_houses").resolve()
 
     images = list((source / "houses_png").glob("*.png"))
-    masks = list((source / "houses_mask").glob("*.png"))
     perm = np.random.permutation(len(images))
     train_size = int(len(perm) * (1 - val_ratio))
 
     train = [images[i] for i in perm[:train_size]]
-    train_masks = [masks[i] for i in perm[:train_size]]
+    train_masks = [source / "houses_mask" / i.name for i in train]
     val = [images[i] for i in perm[train_size:]]
-    val_masks = [masks[i] for i in perm[train_size:]]
+    val_masks = [source / "houses_mask" / i.name for i in val]
 
     assert len(train) == len(train_masks)
     assert len(val) == len(val_masks)
@@ -81,14 +106,13 @@ def process_210_flooded_houses(val_ratio=0.25, domain="A", dest=Path("./insta-fl
     source = Path("/network/tmp1/ccai/data/210_flooded_houses").resolve()
 
     images = list((source / "imgs_png").glob("*.png"))
-    masks = list((source / "masks").glob("*.png"))
     perm = np.random.permutation(len(images))
     train_size = int(len(perm) * (1 - val_ratio))
 
     train = [images[i] for i in perm[:train_size]]
-    train_masks = [masks[i] for i in perm[:train_size]]
+    train_masks = [source / "masks" / (i.stem + "_0" + i.suffix) for i in train]
     val = [images[i] for i in perm[train_size:]]
-    val_masks = [masks[i] for i in perm[train_size:]]
+    val_masks = [source / "masks" / (i.stem + "_0" + i.suffix) for i in val]
 
     assert len(train) == len(train_masks)
     assert len(val) == len(val_masks)
@@ -142,3 +166,4 @@ if __name__ == "__main__":
     process_210_flooded_houses(val_ratio, "A", dest)
     process_deeplab_segmentation_houses(val_ratio, "B", dest)
     print()
+    check(dest)
