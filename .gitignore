@@ -7,6 +7,7 @@
 **/*.rar
 **/*.DS_Store
 
+**/.vscode/
 **/checkpoints/
 
 output/
