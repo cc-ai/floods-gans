@@ -7,6 +7,7 @@ from models import create_model
 from util.visualizer import Visualizer
 from util.visualizer import save_val_set
 from util.visualizer import overlay_flood_mask
+from util.visualizer import fake_img
 import os
 
 comet_exp = None
@@ -81,7 +82,6 @@ if __name__ == "__main__":
                 model.save_networks(save_suffix)
 
             iter_data_time = time.time()      
-            
         if epoch % opt.save_epoch_freq == 0:
             print(
                 "saving the model at the end of epoch %d, iters %d"
@@ -89,11 +89,12 @@ if __name__ == "__main__":
             )
             model.save_networks("latest")
             model.save_networks(epoch)
-
+        
         print(
             "End of epoch %d / %d \t Time Taken: %d sec"
             % (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time)
         )
+        
         # INFERENCE CODE 
         try:os.mkdir(opt_test.results_dir+'epoch'+str(epoch)+'/')
         except:pass
@@ -112,20 +113,20 @@ if __name__ == "__main__":
             if i % 5 == 0:
                 print('processing (%04d)-th image... %s' % (i, img_path))
 
-            save_val_set(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',img_path, visuals,aspect_ratio=opt_test.aspect_ratio, width=opt_test.display_winsize)
+            save_val_set(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',img_path, \
+                         visuals,aspect_ratio=opt_test.aspect_ratio, width=opt_test.display_winsize)
         # Add the transformation in blue overlay
-        overlay_flood_mask(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
+        overlay_flood_mask(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',opt_test.results_dir+'epoch'+str(epoch)+'/overlay/0_')
         print('overlay is saved')
         if epoch % 10 == 0:         
             # add comet ML part where we take the img_paths, overlay and save
             if comet_exp is not None:
                 fake_im_list = fake_img(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/')
                 for img_path in fake_im_list:
-                    comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/'+img_path)
+                    comet_exp.log_image(img_path)
                 list_img=os.listdir(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
                 for img_path in list_img:
                     comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'+img_path)
             print('Inference is done, on validation set')
-
-        # INFERENCE CODE END      
+        # INFERENCE CODE END  
         model.update_learning_rate()

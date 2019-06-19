@@ -78,8 +78,8 @@ def fake_img(dir_results):
     fake_im_list = []
     for im_index in range(len(im_list)):
         if im_index % 12 == 0:
-            im_epoch = im_list[im_index : im_index + 12]  # image generated each epoch
-            fake_im_path = dir_results + im_epoch[4]  # real_A_img
+            im_epoch = im_list[im_index : im_index + 12]  # image generated for each val img
+            fake_im_path = dir_results + im_epoch[2]      # fake_B_img
             fake_im_list.append(fake_im_path)
     return(fake_im_list)
 
