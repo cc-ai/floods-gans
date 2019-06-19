@@ -116,11 +116,16 @@ if __name__ == "__main__":
         # Add the transformation in blue overlay
         overlay_flood_mask(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
         print('overlay is saved')
-        # add comet ML part where we take the img_paths, overlay and save
-        if comet_exp is not None:
-            list_img=os.listdir(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
-            for img_path in list_img:
-                comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'+img_path)
-        print('Inference is done, on validation set')
+        if epoch % 10 == 0:         
+            # add comet ML part where we take the img_paths, overlay and save
+            if comet_exp is not None:
+                fake_im_list = fake_img(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/')
+                for img_path in fake_im_list:
+                    comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/'+img_path)
+                list_img=os.listdir(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
+                for img_path in list_img:
+                    comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'+img_path)
+            print('Inference is done, on validation set')
+
         # INFERENCE CODE END      
         model.update_learning_rate()
