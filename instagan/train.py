@@ -61,7 +61,7 @@ if __name__ == "__main__":
             if total_steps % opt.display_freq == 0:
                 save_result = total_steps % opt.update_html_freq == 0
                 visualizer.display_current_results(
-                    model.get_current_visuals(), epoch, save_result, experiment
+                    model.get_current_visuals(), epoch, save_result, comet_exp
                 )
                 
             if total_steps % opt.print_freq == 0:
