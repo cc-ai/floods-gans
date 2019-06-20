@@ -10,7 +10,6 @@ from util.visualizer import overlay_flood_mask
 from util.visualizer import fake_img
 import os
 
-comet_exp = None
 comet_exp = Experiment(api_key="<api_key>",
                         project_name="<project_name>", workspace="<username>")
 
@@ -81,7 +80,7 @@ if __name__ == "__main__":
                 save_suffix = "iter_%d" % total_steps if opt.save_by_iter else "latest"
                 model.save_networks(save_suffix)
 
-            iter_data_time = time.time()      
+            iter_data_time = time.time()     
         if epoch % opt.save_epoch_freq == 0:
             print(
                 "saving the model at the end of epoch %d, iters %d"
@@ -94,31 +93,54 @@ if __name__ == "__main__":
             "End of epoch %d / %d \t Time Taken: %d sec"
             % (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time)
         )
-        
-        # INFERENCE CODE 
-        try:os.mkdir(opt_test.results_dir+'epoch'+str(epoch)+'/')
-        except:pass
-        try:os.mkdir(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/')
-        except:pass
-        try:os.mkdir(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
-        except:pass           
+        # INFERENCE CODE
+        if epoch % 25 == 0:
+            if not os.path.exists(opt_test.results_dir):
+                try:
+                    os.makedirs(opt_test.results_dir)
+                except:
+                    raise OSError("Can't create destination directory (%s)!" % \
+                    (opt_test.results_dir))
 
-        for i, data in enumerate(dataset_test):
-            if i >= opt_test.num_test:
-                break
-            model.set_input(data)
-            model.test()
-            visuals = model.get_current_visuals()
-            img_path = model.get_image_paths()
-            if i % 5 == 0:
-                print('processing (%04d)-th image... %s' % (i, img_path))
+            if not os.path.exists(opt_test.results_dir+'epoch'+str(epoch)+'/'):
+                try:
+                    os.makedirs(opt_test.results_dir+'epoch'+str(epoch)+'/')
+                except:
+                    raise OSError("Can't create destination directory (%s)!" % \
+                        (opt_test.results_dir+'epoch'+str(epoch)+'/'))
 
-            save_val_set(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',img_path, \
-                         visuals,aspect_ratio=opt_test.aspect_ratio, width=opt_test.display_winsize)
-        # Add the transformation in blue overlay
-        overlay_flood_mask(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',opt_test.results_dir+'epoch'+str(epoch)+'/overlay/0_')
-        print('overlay is saved')
-        if epoch % 10 == 0:         
+            if not os.path.exists(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/'):
+                try:
+                    os.makedirs(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/')
+                except:
+                    raise OSError("Can't create destination directory (%s)!" % \
+                        (opt_test.results_dir+'epoch'+str(epoch)+'/val_set/'))
+
+            if not os.path.exists(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'):
+                try:
+                    os.makedirs(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/')
+                except:
+                    raise OSError("Can't create destination directory (%s)!" % \
+                        (opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'))         
+
+            for i, data in enumerate(dataset_test):
+                if i >= opt_test.num_test:
+                    break
+                model.set_input(data)
+                model.test()
+                visuals = model.get_current_visuals()
+                img_path = model.get_image_paths()
+                if i % 5 == 0:
+                    print('processing (%04d)-th image... %s' % (i, img_path))
+
+                save_val_set(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',img_path, \
+                             visuals,aspect_ratio=opt_test.aspect_ratio, width=opt_test.display_winsize)
+            # Add the transformation in blue overlay
+            overlay_flood_mask(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/',\
+                               opt_test.results_dir+'epoch'+str(epoch)+'/overlay/',\
+                               prefix = '0_')
+            print('overlay is saved')
+
             # add comet ML part where we take the img_paths, overlay and save
             if comet_exp is not None:
                 fake_im_list = fake_img(opt_test.results_dir+'epoch'+str(epoch)+'/val_set/')
@@ -128,5 +150,5 @@ if __name__ == "__main__":
                 for img_path in list_img:
                     comet_exp.log_image(opt_test.results_dir+'epoch'+str(epoch)+'/overlay/'+img_path)
             print('Inference is done, on validation set')
-        # INFERENCE CODE END  
+        # INFERENCE CODE END 
         model.update_learning_rate()
