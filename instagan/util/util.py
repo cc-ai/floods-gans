@@ -19,7 +19,7 @@ def tensor2im(input_image, imtype=np.uint8):
     return image_numpy.astype(imtype)
 
 
-def diagnose_network(net, name='network'):
+def diagnose_network(net, name="network"):
     mean = 0.0
     count = 0
     for param in net.parameters():
@@ -40,11 +40,13 @@ def save_image(image_numpy, image_path):
 def print_numpy(x, val=True, shp=False):
     x = x.astype(np.float64)
     if shp:
-        print('shape,', x.shape)
+        print("shape,", x.shape)
     if val:
         x = x.flatten()
-        print('mean = %3.3f, min = %3.3f, max = %3.3f, median = %3.3f, std=%3.3f' % (
-            np.mean(x), np.min(x), np.max(x), np.median(x), np.std(x)))
+        print(
+            "mean = %3.3f, min = %3.3f, max = %3.3f, median = %3.3f, std=%3.3f"
+            % (np.mean(x), np.min(x), np.max(x), np.median(x), np.std(x))
+        )
 
 
 def mkdirs(paths):
@@ -58,3 +60,42 @@ def mkdirs(paths):
 def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
+
+
+def make_test_dirs(opt_test, epoch):
+    test_res_dir = Path(opt_test.results_dir)
+    if not test_res_dir.exists():
+        try:
+            test_res_dir.mkdir(parents=True)
+        except:
+            raise OSError(
+                "Can't create destination directory (%s)!" % str(test_res_dir)
+            )
+
+    test_res_dir_epoch = test_res_dir / "epoch{}".format(epoch)
+    if not test_res_dir_epoch.exists():
+        try:
+            test_res_dir_epoch.mkdir(parents=True)
+        except:
+            raise OSError(
+                "Can't create destination directory (%s)!" % str(test_res_dir_epoch)
+            )
+
+    test_res_dir_epoch_val = test_res_dir_epoch / "val_set"
+    if not test_res_dir_epoch_val.exists():
+        try:
+            test_res_dir_epoch_val.mkdir(parents=True)
+        except:
+            raise OSError(
+                "Can't create destination directory (%s)!" % str(test_res_dir_epoch_val)
+            )
+
+    test_res_dir_epoch_overlay = test_res_dir_epoch / "overlay"
+    if not test_res_dir_epoch_overlay.exists():
+        try:
+            test_res_dir_epoch_overlay.mkdir(parents=True)
+        except:
+            raise OSError(
+                "Can't create destination directory (%s)!"
+                % str(test_res_dir_epoch_overlay)
+            )

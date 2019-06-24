@@ -9,6 +9,7 @@ from data import CreateDataLoader
 from models import create_model
 from options.train_options import TrainOptions
 from util.visualizer import Visualizer, fake_img, overlay_flood_mask, save_val_set
+from util.util import make_test_dirs
 
 comet_exp = Experiment(
     api_key="<api_key>", project_name="<project_name>", workspace="<username>"
@@ -95,45 +96,8 @@ if __name__ == "__main__":
             % (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time)
         )
         # INFERENCE CODE
-        test_res_dir = Path(opt_test.results_dir)
         if epoch % 25 == 0:
-            if not test_res_dir.exists():
-                try:
-                    test_res_dir.mkdir(parents=True)
-                except:
-                    raise OSError(
-                        "Can't create destination directory (%s)!" % str(test_res_dir)
-                    )
-
-            test_res_dir_epoch = test_res_dir / "epoch{}".format(epoch)
-            if not test_res_dir_epoch.exists():
-                try:
-                    test_res_dir_epoch.mkdir(parents=True)
-                except:
-                    raise OSError(
-                        "Can't create destination directory (%s)!"
-                        % str(test_res_dir_epoch)
-                    )
-
-            test_res_dir_epoch_val = test_res_dir_epoch / "val_set"
-            if not test_res_dir_epoch_val.exists():
-                try:
-                    test_res_dir_epoch_val.mkdir(parents=True)
-                except:
-                    raise OSError(
-                        "Can't create destination directory (%s)!"
-                        % str(test_res_dir_epoch_val)
-                    )
-
-            test_res_dir_epoch_overlay = test_res_dir_epoch / "overlay"
-            if not test_res_dir_epoch_overlay.exists():
-                try:
-                    test_res_dir_epoch_overlay.mkdir(parents=True)
-                except:
-                    raise OSError(
-                        "Can't create destination directory (%s)!"
-                        % str(test_res_dir_epoch_overlay)
-                    )
+            make_test_dirs(opt_test, epoch)
 
             for i, data in enumerate(dataset_test):
                 if i >= opt_test.num_test:
