@@ -6,4 +6,8 @@ The original readme is [here](Original_README.md) and License is kept.
 
 # How to use
 
-To do
+Testing:
+
+```
+python test.py --dataroot /network/tmp1/ccai/data/val_set --name flood_cg_cropped_street --model test --no_dropout --results_dir /network/tmp1/ccai/results/cycle_gan/val_set_19_06
+```
