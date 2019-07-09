@@ -7,6 +7,7 @@ def is_mask(folder, value):
     """
     Check if every mask in a folder is 0 255 format
     :param folder: folder to examine
+    :param value: expected value, either 1 for binary or 255 for 0-255 valued
     """
     print("Examining", folder)
     list_mask_path = os.listdir(folder)
