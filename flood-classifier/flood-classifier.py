@@ -22,7 +22,7 @@ num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 2)
 model.load_state_dict(torch.load('./checkpoints/resnet-18-epoch24.pth'))
 model.eval()
-model.cuda()
+model.to(device)
 
 # Normalization for inference PIL -> torch.Variable
 data_transforms = transforms.Compose([
