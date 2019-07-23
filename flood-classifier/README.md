@@ -1,5 +1,6 @@
 # FLOOD CLASSIFIER
 
+*Most of the code has been taken from the [TRANSFER LEARNING TUTORIAL](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html#sphx-glr-beginner-transfer-learning-tutorial-py)*
 ## Model Architecture:
 
 ResNet-18 model from
