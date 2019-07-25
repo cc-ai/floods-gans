@@ -4,6 +4,13 @@ This is a fork of the original repo -> https://github.com/junyanz/pytorch-CycleG
 
 The original readme is [here](Original_README.md) and License is kept.
 
-# How to use
+# CycleGAN for Domain Adaptation
 
-To do
+Training :
+```
+python train.py --dataroot /network/tmp1/ccai/data/elementai_mapillary/ --name elementai_to_mapillary --no_dropout --checkpoints_dir /network/tmp1/ccai/data/domain_adaptation
+```
+Testing :
+```
+python test.py --dataroot /network/tmp1/ccai/data/elementai_data/ --name element_ai_off_to_on --model cycle_gan --no_dropout --checkpoints_dir /network/tmp1/ccai/data/domain_adaptation
+```
