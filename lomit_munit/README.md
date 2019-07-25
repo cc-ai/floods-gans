@@ -3,14 +3,6 @@
 ![Python 3.6](https://img.shields.io/badge/python-3.6-green.svg)
 ## MUNIT: Multimodal UNsupervised Image-to-image Translation
 
-## Running the code
-Under the configs folder is the file : ```street2flood_list.yaml``` which lists all the parameters and the location where the data is stored and the format in which the data is input
-
-You have to create 4 .txt files (trainA.txt, trainB.txt, testA.txt, testB.txt) in which every line contains the absolute address to image followed by a space and then absolute address to corresponding mask where the image and mask belong to respective folders i.e. (trainA, trainB, testA, testB)
-
-## Running command
-```python train.py --config configs/street2flood_list.yaml```
-
 ### License
 
 Copyright (C) 2018 NVIDIA Corporation.  All rights reserved.

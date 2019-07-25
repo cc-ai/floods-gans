@@ -215,20 +215,27 @@ class VAEGen(nn.Module):
 class StyleEncoder(nn.Module):
     def __init__(self, n_downsample, input_dim, dim, style_dim, norm, activ, pad_type):
         super(StyleEncoder, self).__init__()
-        self.model = []
-        self.model += [Conv2dBlock(input_dim, dim, 7, 1, 3, norm=norm, activation=activ, pad_type=pad_type)]
+        self.shared = []
+        self.spec_layers = []
+        self.shared += [Conv2dBlock(input_dim, dim, 7, 1, 3, norm=norm, activation=activ, pad_type=pad_type)]
         for i in range(2):
-            self.model += [Conv2dBlock(dim, 2 * dim, 4, 2, 1, norm=norm, activation=activ, pad_type=pad_type)]
+            self.shared += [Conv2dBlock(dim, 2 * dim, 4, 2, 1, norm=norm, activation=activ, pad_type=pad_type)]
             dim *= 2
         for i in range(n_downsample - 2):
-            self.model += [Conv2dBlock(dim, dim, 4, 2, 1, norm=norm, activation=activ, pad_type=pad_type)]
-        self.model += [nn.AdaptiveAvgPool2d(1)] # global average pooling
-        self.model += [nn.Conv2d(dim, style_dim, 1, 1, 0)]
-        self.model = nn.Sequential(*self.model)
+            self.spec_layers += [Conv2dBlock(dim, dim, 4, 2, 1, norm=norm, activation=activ, pad_type=pad_type)]
+        self.spec_layers += [nn.AdaptiveAvgPool2d(1)] # global average pooling
+        self.spec_layers += [nn.Conv2d(dim, style_dim, 1, 1, 0)]
+        self.shared = nn.Sequential(*self.shared)
+        self.foreground = nn.Sequential(*self.spec_layers)
+        self.background = nn.Sequential(*self.spec_layers)
         self.output_dim = dim
 
-    def forward(self, x):
-        return self.model(x)
+    def forward(self, x,isF=True):
+        x= self.shared(x)
+        if isF:
+            return self.foreground(x)
+        else:
+            return self.background(x)
 
 class ContentEncoder(nn.Module):
     def __init__(self, n_downsample, n_res, input_dim, dim, norm, activ, pad_type):
@@ -261,7 +268,7 @@ class Decoder(nn.Module):
                            Conv2dBlock(dim, dim // 2, 5, 1, 2, norm='ln', activation=activ, pad_type=pad_type)]
             dim //= 2
         # use reflection padding in the last conv layer
-        self.model += [Conv2dBlock(dim, output_dim, 7, 1, 3, norm='none', activation='tanh', pad_type=pad_type)]
+        self.model += [Conv2dBlock(dim, output_dim, 7, 1, 3, norm='ln', activation='tanh', pad_type=pad_type)]
         self.model = nn.Sequential(*self.model)
 
         self.f_mlp = MLP(style_dim, dim*8, mlp_dim, 3, norm='none', activ=activ)

@@ -21,15 +21,23 @@ def default_flist_reader(flist):
     i = 1
     with open(flist, 'r') as rf:
         for line in rf.readlines():
-            if i%2==0:
-                segpath = line.rstrip()
-                seglist.append(segpath)
-                if not os.path.exists(segpath):
-                    print('not found', segpath)
-            else:
-                impath = line.rstrip()
-                imlist.append(impath)
-            i+=1
+            impath = line.rstrip()
+            imlist.append(impath)
+            segpath = impath[:-4]+"_0.png"
+            seglist.append(segpath)
+            if not os.path.exists(segpath):
+                print('not found', segpath)
+            
+            
+#             if i%2==0:
+#                 segpath = line.rstrip()
+#                 seglist.append(segpath)
+#                 if not os.path.exists(segpath):
+#                     print('not found', segpath)
+#             else:
+#                 impath = line.rstrip()
+#                 imlist.append(impath)
+#             i+=1
 #             impath, segpath = line.strip().split(' ')
 #             imlist.append(impath)
 #             seglist.append(segpath)
@@ -37,7 +45,7 @@ def default_flist_reader(flist):
 #             print(segpath)
 #             if not os.path.exists(segpath):
 #                 print('not found', segpath)
-
+    
     return imlist, seglist
 
 
@@ -59,7 +67,7 @@ class ImageFilelist(data.Dataset):
         transform1 = transforms.Compose(self.transform)
         transform2 = transforms.Compose(self.transform + [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
         img = transform2(img)
-        seg = transform1(seg)
+        seg = transform1(seg)*255
         return img, seg
 
 

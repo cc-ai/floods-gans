@@ -2,6 +2,9 @@
 Copyright (C) 2018 NVIDIA Corporation.  All rights reserved.
 Licensed under the CC BY-NC-SA 4.0 license (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
 """
+import matplotlib.pyplot as plt
+import matplotlib
+
 from utils import get_all_data_loaders, prepare_sub_folder, write_html, write_loss, get_config, write_2images, Timer
 import argparse
 from torch.autograd import Variable
@@ -43,8 +46,12 @@ else:
     sys.exit("Only support MUNIT|UNIT")
 trainer.cuda()
 train_loader_a, train_loader_b, test_loader_a, test_loader_b = get_all_data_loaders(config)
+# print(train_loader_a.shape)
 train_display_images_a = torch.stack([train_loader_a.dataset[i][0] for i in range(display_size)]).cuda()
 train_display_images_b = torch.stack([train_loader_b.dataset[i][0] for i in range(display_size)]).cuda()
+# print(train_display_images_b.min(), train_display_images_b.max(), train_display_images_b.shape)
+# print(train_display_images_a.min(), train_display_images_a.max(), train_display_images_a.shape)
+
 test_display_images_a = torch.stack([test_loader_a.dataset[i][0] for i in range(display_size)]).cuda()
 test_display_images_b = torch.stack([test_loader_b.dataset[i][0] for i in range(display_size)]).cuda()
 
@@ -61,10 +68,26 @@ iterations = trainer.resume(checkpoint_directory, hyperparameters=config) if opt
 while True:
     for it, (imageseg_a, imageseg_b) in enumerate(zip(train_loader_a, train_loader_b)):
         images_a = imageseg_a[0]
+        disp_im_a = (images_a[0].transpose(0,1).transpose(1,2) + 1.)/2.
+#         print(disp_im_a.shape)
         segs_a = imageseg_a[1]
-
+        
+#         plt.imshow(disp_im_a)
+#         plt.savefig("LogImage/TESTA_" + str(it) + ".png")
         images_b = imageseg_b[0]
-        segs_b = imageseg_b[1]/255
+        segs_b = imageseg_b[1]
+        h = segs_b[0].transpose(0,1).transpose(1,2)
+        disp_im_b = (images_b[0].transpose(0,1).transpose(1,2) + 1.)/2.
+        #z = disp_im_b*h
+#         plt.imshow(h*1.)
+#         plt.savefig("LogImage/TESTC_" + str(it) + ".png")
+#         print(disp_im_b.shape)
+#         print(disp_im_b.sum())
+        if disp_im_b.sum() <= 1000:
+            print("BLACK IMAGE")
+            continue
+#         plt.imshow(disp_im_b)
+#         plt.savefig("LogImage/TESTB_" + str(it) + ".png")
         
         trainer.update_learning_rate()
         images_a, images_b = images_a.cuda().detach(), images_b.cuda().detach()
