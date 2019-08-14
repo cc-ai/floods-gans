@@ -6,7 +6,7 @@ import google_streetview.helpers as gsv_helpers
 def get_image_from_gps(coords):
     params = {
         "size": "512x512",
-        "location": "45.5307147,-73.6157818",
+        "location": coords,
         "pitch": "10",
         "radius": "1000",
         "key": "ASK MIKE OR VICTOR",
