@@ -119,6 +119,24 @@ def process_210_flooded_houses(val_ratio=0.25, domain="A", dest=Path("./insta-fl
 
     copy_images(name, dest, domain, train, train_masks, val, val_masks)
 
+def process_280_flooded_houses(val_ratio=0.25, domain="A", dest=Path("./insta-floods")):
+    name = "[280_flooded_houses seg]"
+    source = Path("/network/tmp1/ccai/data/280_flooded_houses").resolve()
+
+    images = list((source / "imgs_png").glob("*.png"))
+    perm = np.random.permutation(len(images))
+    train_size = int(len(perm) * (1 - val_ratio))
+
+    train = [images[i] for i in perm[:train_size]]
+    train_masks = [source / "masks" / (i.stem + "_0" + i.suffix) for i in train]
+    val = [images[i] for i in perm[train_size:]]
+    val_masks = [source / "masks" / (i.stem + "_0" + i.suffix) for i in val]
+
+    assert len(train) == len(train_masks)
+    assert len(val) == len(val_masks)
+
+    copy_images(name, dest, domain, train, train_masks, val, val_masks)
+
 
 def mkdirs(dest):
     if not dest.exists():
@@ -145,7 +163,7 @@ def mkdirs(dest):
 if __name__ == "__main__":
 
     val_ratio = 0.15
-    dest = Path("/network/tmp1/ccai/inference_data/instagan/floods_with_waterdb")
+    dest = Path("/network/tmp1/ccai/inference_data/instagan/depth_floods_280")
     np.random.seed(123)
 
     warn = mkdirs(dest)
@@ -162,8 +180,9 @@ if __name__ == "__main__":
             print("Aborting")
             sys.exit()
 
-    process_water_video_db(val_ratio, "A", dest)
-    process_210_flooded_houses(val_ratio, "A", dest)
-    process_deeplab_segmentation_houses(val_ratio, "B", dest)
+    # process_water_video_db(val_ratio, "A", dest)
+    # process_210_flooded_houses(val_ratio, "A", dest)
+    process_280_flooded_houses(val_ratio, "B", dest)
+    process_deeplab_segmentation_houses(val_ratio, "A", dest)
     print()
     check(dest)

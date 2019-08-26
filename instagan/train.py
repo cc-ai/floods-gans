@@ -95,8 +95,10 @@ if __name__ == "__main__":
             "End of epoch %d / %d \t Time Taken: %d sec"
             % (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time)
         )
+
         # INFERENCE CODE
         if epoch % 25 == 0:
+
             make_test_dirs(opt_test, epoch)
 
             for i, data in enumerate(dataset_test):

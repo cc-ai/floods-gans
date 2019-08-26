@@ -26,6 +26,7 @@ See options/base_options.py and options/test_options.py for more test options.
 See training and test tips at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/tips.md
 See frequently asked questions at: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/qa.md
 """
+from comet_ml import Experiment
 import os
 from options.test_options import TestOptions
 from data import create_dataset
@@ -33,8 +34,9 @@ from models import create_model
 from util.visualizer import save_images
 from util import html
 
-
 if __name__ == '__main__':
+    comet_exp = Experiment(project_name="cyclegan", workspace="vict0rsch")
+
     opt = TestOptions().parse()  # get test options
     # hard-code some parameters for test
     opt.num_threads = 0   # test code only supports num_threads = 1
@@ -59,8 +61,10 @@ if __name__ == '__main__':
         model.set_input(data)  # unpack data from data loader
         model.test()           # run inference
         visuals = model.get_current_visuals()  # get image results
-        img_path = model.get_image_paths()     # get image paths
+        img_path = model.get_image_paths()
+        comet_exp.log_image(img_path[0])     # get image paths
         if i % 5 == 0:  # save images to an HTML file
             print('processing (%04d)-th image... %s' % (i, img_path))
         save_images(webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
     webpage.save()  # save the HTML
+    comet_exp.log_asset_folder(webpage.get_image_dir())
