@@ -1,0 +1,1 @@
+python test.py --dataroot /network/home/schmidtv/ccai/data/27.02.FloodingData/Houses/testB --name flood_cg_cropped_street --model test --no_dropout --results_dir /network/home/schmidtv/ccai/data/test/grass

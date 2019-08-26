@@ -27,6 +27,13 @@ Target folder structure:
         ├── valB
         └── valB_seg
 ```
+## Variable number of epochs
+If you want to run the training for variable number of epochs, then there are 2 options to do this :
+```
+1. --niters which means the number of epochs for which you want the learning rate to remain constant
+2. --niter_decay which means the number of epochs in which you want the learning rate to decay to zero from constant value
+```
+So, you can control total number of epochs via (--niters + --niter_decay) together.
 
 ## Runs
 

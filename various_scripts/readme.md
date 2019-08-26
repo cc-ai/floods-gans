@@ -51,3 +51,11 @@ If you've already downloaded and merged runs of `googleimagesdownload` and run a
 ```
 $ python purge.py run3 run4
 ```
+
+## Pink to mask
+
+Create a third set of images, `{i}m.png` in addition to `{i}p.png` `{i}f.png` and `{i}.png`. Run with `--source path/to/folder/with/images` ; default is current working directory. For instance: 
+
+```
+$ python pink_to_mask.py --source ./data/SimFlood 50-50f-50p
+```
