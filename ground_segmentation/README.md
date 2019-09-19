@@ -16,6 +16,7 @@ Link to the article : [DeepLab](https://arxiv.org/pdf/1606.00915.pdf)
 Most of the code has been inspired from :[github/warmspringwinds](https://github.com/warmspringwinds/pytorch-segmentation-detection)
 
 **Label Table**
+
 | Label            | Description |
 |------------------|-----------|
 | 0            | road |
