@@ -15,6 +15,30 @@ Link to the article : [DeepLab](https://arxiv.org/pdf/1606.00915.pdf)
 
 Most of the code has been inspired from :[github/warmspringwinds](https://github.com/warmspringwinds/pytorch-segmentation-detection)
 
+**Label Table**
+| Label            | Description |
+|------------------|-----------|
+| 0            | road |
+| 1            | sidewalk |
+| 2            | building |
+| 3            | wall |
+| 4            | fence |
+| 5            | pole |
+| 6            | traffic light |
+| 7            | traffic sign |
+| 9 | vegetation |
+| 10            | terrain|
+| 11            | sky |
+| 12            | person |
+| 13            | rider |
+| 14            | car |
+| 15            | truck|
+| 16            | bus|
+| 17            | train|
+| 18            | motorcycle|
+| 19            | bicycle|
+
+
 ## Installation : 
 
 This code requires:
