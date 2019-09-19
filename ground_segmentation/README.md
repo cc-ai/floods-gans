@@ -27,17 +27,17 @@ Most of the code has been inspired from :[github/warmspringwinds](https://github
 | 5            | pole |
 | 6            | traffic light |
 | 7            | traffic sign |
-| 9 | vegetation |
-| 10            | terrain|
-| 11            | sky |
-| 12            | person |
-| 13            | rider |
-| 14            | car |
-| 15            | truck|
-| 16            | bus|
-| 17            | train|
-| 18            | motorcycle|
-| 19            | bicycle|
+| 8 | vegetation |
+| 9            | terrain|
+| 10            | sky |
+| 11            | person |
+| 12            | rider |
+| 13            | car |
+| 14            | truck|
+| 15            | bus|
+| 16            | train|
+| 17            | motorcycle|
+| 18            | bicycle|
 
 
 ## Installation : 
