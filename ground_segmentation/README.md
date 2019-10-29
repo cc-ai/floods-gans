@@ -1,21 +1,27 @@
 # DeepLab - Segment the ground (Road, sidewalk, terrain)
 
-**Training dataset Cityscapes**
+We use [DeepLab](https://arxiv.org/pdf/1606.00915.pdf) model trained on Cityscapes dataset and merge some labels to output a binary mask of the Ground. Most of the code has been inspired from :[github/warmspringwinds](https://github.com/warmspringwinds/pytorch-segmentation-detection).
 
- The dataset contains video sequences recorded in street scenes from 50 different cities, with high quality pixel-level annotations of  ```5 000``` frames. The annotations contain ```19``` classes which represent cars, road, traffic signs and so on.
+Merged labels: 
+
+- Road
+- Sidewalk
+- Terrain
+
  
- **Performances**
+ **Pre-trained Model and Performances** 
  
  | Model            | Test data |Mean IOU | Mean pix. accuracy | Pixel accuracy|Inference time (512x512 px. image) | Model Download Link |
 |------------------|-----------|---------|--------------------|----------------|----|---------------------|
 | Resnet-34-8s   | Validation set  |69.1  | in prog.           | in prog.       |50 ms.| [Dropbox](https://www.dropbox.com/s/jeaw9ny0jtl60uc/resnet_34_8s_cityscapes_best.pth?dl=0)            |
 
 
-Link to the article : [DeepLab](https://arxiv.org/pdf/1606.00915.pdf)
+Link to the article : 
 
-Most of the code has been inspired from :[github/warmspringwinds](https://github.com/warmspringwinds/pytorch-segmentation-detection)
+
 
 **Label Table**
+
 | Label            | Description |
 |------------------|-----------|
 | 0            | road |
@@ -26,17 +32,17 @@ Most of the code has been inspired from :[github/warmspringwinds](https://github
 | 5            | pole |
 | 6            | traffic light |
 | 7            | traffic sign |
-| 9 | vegetation |
-| 10            | terrain|
-| 11            | sky |
-| 12            | person |
-| 13            | rider |
-| 14            | car |
-| 15            | truck|
-| 16            | bus|
-| 17            | train|
-| 18            | motorcycle|
-| 19            | bicycle|
+| 8 | vegetation |
+| 9            | terrain|
+| 10            | sky |
+| 11            | person |
+| 12            | rider |
+| 13            | car |
+| 14            | truck|
+| 15            | bus|
+| 16            | train|
+| 17            | motorcycle|
+| 18            | bicycle|
 
 
 ## Installation : 
@@ -49,6 +55,22 @@ This code requires:
 
 - Model weights downloaded
 
-**Examples**
+## How to use ?
+### Several images
+```
+Usage: deeplab_ground_segmentation.py  [OPTIONS]
+
+  Inference from a single folder
+
+Options:
+  --size_mask int             Size of the binary mask output [required]
+  --path_to_images PATH       Folder of images to be processed [required]
+  --dir_mask PATH             Folder where the masks will be stored [required]
+  --batch_size int            Batch Size [required]
+  --weight_pth PATH           PyTorch model to be loaded [required]
+
+```
+
+Example:
 
 ```python deeplab_ground_segmentation.py --size_mask 512 --path_to_images './images/' --dir_mask './masks/' --batch_size 16 --weight_pth 'resnet_34_8s_cityscapes_best.pth'```
