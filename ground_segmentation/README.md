@@ -13,12 +13,7 @@ Merged labels:
  
  | Model            | Test data |Mean IOU | Mean pix. accuracy | Pixel accuracy|Inference time (512x512 px. image) | Model Download Link |
 |------------------|-----------|---------|--------------------|----------------|----|---------------------|
-| Resnet-34-8s   | Validation set  |69.1  | in prog.           | in prog.       |50 ms.| [Dropbox](https://www.dropbox.com/s/jeaw9ny0jtl60uc/resnet_34_8s_cityscapes_best.pth?dl=0)            |
-
-
-Link to the article : 
-
-
+| Resnet-34-8s   | Validation set  |69.1  | in prog.           | in prog.       |50 ms.| [Dropbox](https://www.dropbox.com/s/jeaw9ny0jtl60uc/resnet_34_8s_cityscapes_best.pth?dl=0)            | 
 
 **Label Table**
 
