@@ -146,7 +146,13 @@ if __name__ == "__main__":
     for i, img_path in tqdm(enumerate(to_load_str)):
 
         # print(img_path, end="\r")
-        read_image = io.imread(img_path)
+        try:
+            read_image = io.imread(img_path)
+        except ValueError as error:
+            print("Error:", error)
+            print(">>> Ignoring step {}: {}".format(i, str(img_path)))
+            continue
+
         if len(read_image.shape) == 1:
             if len(read_image) == 2:
                 read_image = read_image[0]
