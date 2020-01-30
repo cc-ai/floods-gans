@@ -193,7 +193,7 @@ if __name__ == "__main__":
         dataset, batch_size=1, shuffle=False, num_workers=6
     )
 
-    for i, imgs in tqdm(enumerate(dataloader)):
+    for i, imgs in enumerate(tqdm(dataloader)):
 
         for input_img in imgs:
 
