@@ -92,6 +92,26 @@ def env_to_path(path):
     return "/".join(path_elements)
 
 
+from torch.utils.data import Dataset
+
+
+class CustomDataset(Dataset):
+    def __init__(self, paths):
+        self.paths = paths
+
+    def __len__(self):
+        return len(self.paths)
+
+    def __getitem__(self, i):
+        try:
+            return io.imread(self.paths[i])
+        except ValueError as e:
+            print()
+            print(e)
+            print(">>> Error loading image {}: {}".format(i, self.paths[i]))
+            print()
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -143,71 +163,79 @@ if __name__ == "__main__":
     print("============================= TEST ============================")
     model.switch_to_eval()
 
-    for i, img_path in tqdm(enumerate(to_load_str)):
+    dataset = CustomDataset(to_load_str)
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=4, shuffle=False, num_workers=6
+    )
 
-        # print(img_path, end="\r")
-        try:
-            read_image = io.imread(img_path)
-        except ValueError as error:
-            print("Error:", error)
-            print(">>> Ignoring step {}: {}".format(i, str(img_path)))
-            continue
+    for i, imgs in tqdm(enumerate(dataloader)):
 
-        if len(read_image.shape) == 1:
-            if len(read_image) == 2:
-                read_image = read_image[0]
-            else:
-                print("Error at step", i, "for image", img_path)
-                break
+        for read_image in imgs:
 
-        img = np.float32(read_image) / 255.0
-        if img.shape[-1] == 4:
-            img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
-        img = resize(img, (input_height, input_width), order=1)
-        input_img = torch.from_numpy(np.transpose(img, (2, 0, 1))).contiguous().float()
-        input_img = input_img.unsqueeze(0)
+            if read_image is None:
+                continue
 
-        input_images = Variable(input_img.cuda())
-        pred_log_depth = model.netG.forward(input_images)
-        pred_log_depth = torch.squeeze(pred_log_depth)
+            if len(read_image.shape) == 1:
+                if len(read_image) == 2:
+                    read_image = read_image[0]
+                else:
+                    print("Error at step", i, "for image", "img_path")
+                    break
 
-        pred_depth = torch.exp(pred_log_depth)
-
-        # visualize prediction using inverse depth, so that we don't need sky segmentation (if you want to use RGB map for visualization, \
-        # you have to run semantic segmentation to mask the sky first since the depth of sky is random from CNN)
-        pred_inv_depth = 1 / pred_depth
-        pred_inv_depth = pred_inv_depth.data.cpu().numpy()
-        # you might also use percentile for better visualization
-        pred_inv_depth = pred_inv_depth / np.amax(pred_inv_depth)
-
-        pred_inv_depth = (pred_inv_depth * 255).astype(np.uint8)
-
-        io.imsave(output_folder / (to_load[i].stem + ".png"), pred_inv_depth)
-        # print(pred_inv_depth.shape)
-
-    if HTML:
-        src = output_folder / "source"
-        src.mkdir()
-        html = '<html lang="en"><head><meta charset="utf-8"><style>{}</style>\n</head>'
-        html += '<body><div id="all">{}</div></body></html>'
-        imgs = ""
-        for im in to_load[:i]:
-            imgs += "<div class='comparison'><img src='{}'><img src='source/{}'></div>\n".format(
-                im.stem + ".png", im.name
+            img = np.float32(read_image) / 255.0
+            if img.shape[-1] == 4:
+                img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
+            img = resize(img, (input_height, input_width), order=1)
+            input_img = (
+                torch.from_numpy(np.transpose(img, (2, 0, 1))).contiguous().float()
             )
-            shutil.copy(str(im), str(src / im.name))
-        style = """
-            img {
-                width: 50%
-            }
-            .comparison {
-                margin: 20px
-            }
-        """
-        html = html.format(style, imgs)
-        with (output_folder / "view.html").open("w") as f:
-            f.write(html)
+            input_img = input_img.unsqueeze(0)
 
-        zipf = zipfile.ZipFile(inf / f"{date}.zip", "w", zipfile.ZIP_DEFLATED)
-        zipdir(str(output_folder), zipf)
-        zipf.close()
+            input_images = Variable(input_img.cuda())
+            pred_log_depth = model.netG.forward(input_images)
+            pred_log_depth = torch.squeeze(pred_log_depth)
+
+            pred_depth = torch.exp(pred_log_depth)
+
+            # visualize prediction using inverse depth, so that we don't need
+            # sky segmentation (if you want to use RGB map for visualization,
+            # you have to run semantic segmentation to mask the sky first
+            # since the depth of sky is random from CNN)
+            pred_inv_depth = 1 / pred_depth
+            pred_inv_depth = pred_inv_depth.data.cpu().numpy()
+            # you might also use percentile for better visualization
+            pred_inv_depth = pred_inv_depth / np.amax(pred_inv_depth)
+
+            pred_inv_depth = (pred_inv_depth * 255).astype(np.uint8)
+
+            io.imsave(output_folder / (to_load[i].stem + ".png"), pred_inv_depth)
+            # print(pred_inv_depth.shape)
+
+        if HTML:
+            src = output_folder / "source"
+            src.mkdir()
+            html = (
+                '<html lang="en"><head><meta charset="utf-8"><style>{}</style>\n</head>'
+            )
+            html += '<body><div id="all">{}</div></body></html>'
+            imgs = ""
+            for im in to_load[:i]:
+                imgs += "<div class='comparison'><img src='{}'><img src='source/{}'></div>\n".format(
+                    im.stem + ".png", im.name
+                )
+                shutil.copy(str(im), str(src / im.name))
+            style = """
+                img {
+                    width: 50%
+                }
+                .comparison {
+                    margin: 20px
+                }
+            """
+            html = html.format(style, imgs)
+            with (output_folder / "view.html").open("w") as f:
+                f.write(html)
+
+            zipf = zipfile.ZipFile(inf / f"{date}.zip", "w", zipfile.ZIP_DEFLATED)
+            zipdir(str(output_folder), zipf)
+            zipf.close()
