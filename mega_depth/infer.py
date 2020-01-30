@@ -104,7 +104,23 @@ class CustomDataset(Dataset):
 
     def __getitem__(self, i):
         try:
-            return io.imread(self.paths[i])
+            read_image = io.imread(self.paths[i])
+
+            if len(read_image.shape) == 1:
+                if len(read_image) == 2:
+                    read_image = read_image[0]
+                else:
+                    print("||| Error at step", i, "for image", self.paths[i])
+                    return
+            img = np.float32(read_image) / 255.0
+            if img.shape[-1] == 4:
+                img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
+            img = resize(img, (input_height, input_width), order=1)
+            input_img = (
+                torch.from_numpy(np.transpose(img, (2, 0, 1))).contiguous().float()
+            )
+            input_img = input_img.unsqueeze(0)
+            return input_img
         except ValueError as e:
             print()
             print(e)
@@ -170,26 +186,10 @@ if __name__ == "__main__":
 
     for i, imgs in tqdm(enumerate(dataloader)):
 
-        for read_image in imgs:
+        for input_img in imgs:
 
-            if read_image is None:
+            if input_img is None:
                 continue
-
-            if len(read_image.shape) == 1:
-                if len(read_image) == 2:
-                    read_image = read_image[0]
-                else:
-                    print("Error at step", i, "for image", "img_path")
-                    break
-
-            img = np.float32(read_image) / 255.0
-            if img.shape[-1] == 4:
-                img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
-            img = resize(img, (input_height, input_width), order=1)
-            input_img = (
-                torch.from_numpy(np.transpose(img, (2, 0, 1))).contiguous().float()
-            )
-            input_img = input_img.unsqueeze(0)
 
             input_images = Variable(input_img.cuda())
             pred_log_depth = model.netG.forward(input_images)
