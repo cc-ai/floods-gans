@@ -165,7 +165,7 @@ if __name__ == "__main__":
 
     dataset = CustomDataset(to_load_str)
     dataloader = torch.utils.data.DataLoader(
-        dataset, batch_size=4, shuffle=False, num_workers=6
+        dataset, batch_size=1, shuffle=False, num_workers=6
     )
 
     for i, imgs in tqdm(enumerate(dataloader)):
