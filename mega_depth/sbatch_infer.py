@@ -9,7 +9,7 @@ template = """\
 #SBATCH -c 6
 #SBATCH --gres=gpu:titanxp:1
 #SBATCH --mem=16G
-#SBATCH -o /network/tmp1/schmidtv/mega_inference_slurm-%j.out
+#SBATCH -o /network/home/schmidtv/mega_depth_sbatch_inferences/slurm-%j.out
 
 module load anaconda/3
 
@@ -19,13 +19,13 @@ conda activate base
 conda deactivate
 conda activate clouds
 
-cp {} $SLURM_TMPDIR
+cp -r {} $SLURM_TMPDIR
 
 cd /network/home/schmidtv/ccai/github/floods_gans/mega_depth
 
 python infer.py -i {} -o {}
 
-cp {} {}
+cp -r {} {}
 
 
 """
