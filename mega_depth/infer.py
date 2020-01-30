@@ -174,6 +174,8 @@ if __name__ == "__main__":
         # you might also use percentile for better visualization
         pred_inv_depth = pred_inv_depth / np.amax(pred_inv_depth)
 
+        pred_inv_depth = (pred_inv_depth * 255).astype(np.uint8)
+
         io.imsave(output_folder / (to_load[i].stem + ".png"), pred_inv_depth)
         # print(pred_inv_depth.shape)
 
