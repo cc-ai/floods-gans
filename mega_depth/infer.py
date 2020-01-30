@@ -72,6 +72,26 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file))
 
 
+def env_to_path(path):
+    """Transorms an environment variable mention in a conf file
+    into its actual value. E.g. $HOME/clouds -> /home/vsch/clouds
+
+    Args:
+        path (str): path potentially containing the env variable
+
+    """
+    if not isinstance(path, str):
+        return path
+
+    path_elements = path.split("/")
+    for i, d in enumerate(path_elements):
+        if "$" in d:
+            path_elements[i] = os.environ.get(d.replace("$", ""))
+    if any(d is None for d in path_elements):
+        return ""
+    return "/".join(path_elements)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -91,7 +111,7 @@ if __name__ == "__main__":
     date = str(datetime.datetime.now())[:19]
 
     input_folder = (
-        Path(args.input)
+        Path(env_to_path(args.input))
         if args.input is not None
         else (
             Path("/network/tmp1/ccai/inference_data/instagan/floods_with_waterdb")
@@ -101,7 +121,7 @@ if __name__ == "__main__":
 
     # output_folder = inf / date
     output_folder = (
-        Path(args.output)
+        Path(env_to_path(args.output))
         if args.output is not None
         else (
             Path("/network/tmp1/ccai/inference_data/instagan/floods_with_waterdb")
