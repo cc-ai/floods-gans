@@ -20,6 +20,15 @@ from data.data_loader import CreateDataLoader
 from models.models import create_model
 from options.train_options import TrainOptions
 
+IMG_EXTENSIONS = set(
+    [".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".ppm", ".PPM", ".bmp", ".BMP"]
+)
+
+
+def is_img(path):
+    return path.suffix in IMG_EXTENSIONS
+
+
 # opt = TrainOptions().parse()  # set CUDA_VISIBLE_DEVICES before import torch
 opt = addict.Dict(
     {
@@ -174,7 +183,7 @@ if __name__ == "__main__":
     input_height = 384
     input_width = 512
 
-    to_load = [t.resolve() for t in input_folder.iterdir() if t.is_file()]
+    to_load = [t.resolve() for t in input_folder.iterdir() if t.is_file() and is_img(t)]
     to_load_str = list(map(str, to_load))
     print("============================= TEST ============================")
     model.switch_to_eval()
