@@ -9,6 +9,7 @@ template = """\
 #SBATCH -c 6
 #SBATCH --gres=gpu:titanxp:1
 #SBATCH --mem=16G
+#SBATCH --partition=unkillable
 #SBATCH -o /network/home/schmidtv/mega_depth_sbatch_inferences/slurm-%j.out
 
 module load anaconda/3
