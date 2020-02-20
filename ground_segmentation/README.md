@@ -69,3 +69,6 @@ Options:
 Example:
 
 ```python deeplab_ground_segmentation.py --size_mask 512 --path_to_images './images/' --dir_mask './masks/' --batch_size 16 --weight_pth 'resnet_34_8s_cityscapes_best.pth'```
+
+Note:
+The generated masks are non-binary, and multi-channel. They need to be processed to be binary 1-channel masks. This is done in the MUNIT dataloading code.
