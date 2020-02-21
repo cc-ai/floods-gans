@@ -129,5 +129,11 @@ with torch.no_grad():
           mask_flat=np.zeros(size_mask)
           for p in [0,1,9]: 
             mask_flat[np.where(res[1]==p)]=255
-          cv2.imwrite(dir_mask+list_paths[it_*batch_size+j],mask_flat.astype(int))
+          # Sasha: to help with the multi-channel jpg masks
+          filename = dir_mask+list_paths[it_*batch_size+j]
+          extension_length = len(filename.split('.')[-1])
+          filename_png = filename[:-extension_length-1]+'.png'
+          cv2.imwrite(filename_png,mask_flat.astype(int))
+          #cv2.imwrite(dir_mask+list_paths[it_*batch_size+j],mask_flat.astype(int))
+        
         it_+=1
