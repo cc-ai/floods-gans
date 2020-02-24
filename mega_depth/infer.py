@@ -16,9 +16,7 @@ from skimage.transform import resize
 from torch.autograd import Variable
 from tqdm import tqdm
 
-from data.data_loader import CreateDataLoader
 from models.models import create_model
-from options.train_options import TrainOptions
 
 IMG_EXTENSIONS = set(
     [".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".ppm", ".PPM", ".bmp", ".BMP"]
@@ -121,6 +119,8 @@ class CustomDataset(Dataset):
                 else:
                     print("||| Error at step", i, "for image", self.paths[i])
                     return
+            if len(read_image.shape) == 2:
+                read_image = np.expand_dims(read_image, -1)
             img = np.float32(read_image) / 255.0
             if img.shape[-1] == 4:
                 img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
