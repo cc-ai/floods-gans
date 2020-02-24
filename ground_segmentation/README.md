@@ -51,7 +51,8 @@ This code requires:
 - Model weights downloaded
 
 ## How to use ?
-### Several images
+### Several 
+
 ```
 Usage: deeplab_ground_segmentation.py  [OPTIONS]
 
@@ -59,7 +60,7 @@ Usage: deeplab_ground_segmentation.py  [OPTIONS]
 
 Options:
   --size_mask int             Size of the binary mask output [required]
-  --path_to_images PATH       Folder of images to be processed [required]
+  --path_to_images PATH       Folder of images (png) to be processed [required]
   --dir_mask PATH             Folder where the masks will be stored [required]
   --batch_size int            Batch Size [required]
   --weight_pth PATH           PyTorch model to be loaded [required]
@@ -69,3 +70,6 @@ Options:
 Example:
 
 ```python deeplab_ground_segmentation.py --size_mask 512 --path_to_images './images/' --dir_mask './masks/' --batch_size 16 --weight_pth 'resnet_34_8s_cityscapes_best.pth'```
+
+Note:
+The generated masks are non-binary, and multi-channel. They need to be processed to be binary 1-channel masks. This is done in the MUNIT dataloading code.
