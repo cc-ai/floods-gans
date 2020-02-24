@@ -119,23 +119,20 @@ class CustomDataset(Dataset):
                 else:
                     print("||| Error at step", i, "for image", self.paths[i])
                     return
-
             if len(read_image.shape) == 2:
                 read_image = cv2.cvtColor(read_image, cv2.COLOR_GRAY2RGB)
+
+            if read_image.max() > 1.0:
+                img = np.float32(read_image) / 255.0
 
             if img.shape[-1] == 4:
                 img = cv2.cvtColor(img.astype(np.float32), cv2.COLOR_BGRA2BGR)
 
-            if img.max() > 1.0:
-                img = np.float32(read_image) / 255.0
-
             img = resize(img, (input_height, input_width), order=1)
-
             input_img = (
                 torch.from_numpy(np.transpose(img, (2, 0, 1))).contiguous().float()
             )
             input_img = input_img.unsqueeze(0)
-
             return input_img
         except ValueError as e:
             print()
@@ -149,6 +146,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-o", "--output", type=str)
     parser.add_argument("-i", "--input", type=str)
+    parser.add_argument("-b", "--batch_size", type=int, default=1)
     parser.add_argument("-w", "--web", action="store_true", default=False)
     args = parser.parse_args()
 
@@ -197,7 +195,7 @@ if __name__ == "__main__":
 
     dataset = CustomDataset(to_load_str)
     dataloader = torch.utils.data.DataLoader(
-        dataset, batch_size=4, shuffle=False, num_workers=6
+        dataset, batch_size=args.batch_size, shuffle=False, num_workers=6
     )
 
     for i, imgs in enumerate(tqdm(dataloader)):
